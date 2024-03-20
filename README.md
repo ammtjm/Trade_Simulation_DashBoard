@@ -19,7 +19,7 @@ Trade Simulation Dashboard is a web application that allows users to analyze and
 - Compare the performance of the trading strategy against a buy-and-hold strategy
 - Display key metrics such as cumulative returns, drawdowns, Sharpe ratio, and more
 
-![alt text](image.png)
+![alt text](/image_folder/image.png)
 
 ## Getting Started
 
@@ -66,7 +66,7 @@ python app.py
 
 6. Explore the generated graphs and metrics to gain insights into the trading strategy's performance.
 
-![alt text](image-1.png)
+![alt text](/image_folder/image-1.png)
 
 ## Metrics
 
