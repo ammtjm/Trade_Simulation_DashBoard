@@ -98,15 +98,6 @@ In this diagram:
 - `layouts.py` defines the layout components and interacts with `utils.py` for data processing.
 - `utils.py` contains utility functions used by both `callbacks.py` and `layouts.py`.
 - `assets/` is a directory that stores static assets, such as `styles.css`.
-![alt text](image.png)
 
-```mermaid
-graph LR
-    A[app.py] --> B[callbacks.py]
-    A --> C[layouts.py]
-    A --> D[utils.py]
-    B --> D
-    C --> D
-    A --> E[assets/]
-    E --> F[styles.css]
-```
+![alt text](image-1.png)
+

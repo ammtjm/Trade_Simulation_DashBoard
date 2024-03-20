@@ -39,11 +39,11 @@ def update_graph(n_clicks, datetime_col, price_col, position_flag_col, settlemen
         error_messages = []
 
         # position-flag-columnの値が-1, 0, 1, NaN、または空文字列のみであることを確認
-        if position_flag_col and not set(df[position_flag_col].astype(str).str.strip().unique()).issubset({'-1.0', '0.0', '1.0', 'nan', ''}):
+        if position_flag_col and not set(df[position_flag_col].astype(str).str.strip().unique()).issubset({'-1.0', '0.0', '1.0','-1', '0', '1', 'nan', ''}):
             error_messages.append("Position flag column must contain only -1, 0, 1, NaN, or empty string.")
 
         # 決済フラグの値が0, 1, NaN、または空文字列のみであることを確認
-        if settlement_flag_col and settlement_flag_col != 'None' and not set(df[settlement_flag_col].astype(str).str.strip().unique()).issubset({'0.0', '1.0', 'nan', ''}):
+        if settlement_flag_col and settlement_flag_col != 'None' and not set(df[settlement_flag_col].astype(str).str.strip().unique()).issubset({ '0.0', '1.0', '0', '1', 'nan', ''}):
             error_messages.append("Settlement flag column must contain only 0, 1, NaN, or empty string.")
 
         if quantity_col and quantity_col != 'None':
