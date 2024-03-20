@@ -36,6 +36,29 @@ def update_graph(n_clicks, datetime_col, price_col, position_flag_col, settlemen
 
         df[datetime_col] = pd.to_datetime(df[datetime_col])
 
+        error_messages = []
+
+        # position-flag-columnの値が-1, 0, 1, NaN、または空文字列のみであることを確認
+        if position_flag_col and not set(df[position_flag_col].astype(str).str.strip().unique()).issubset({'-1.0', '0.0', '1.0', 'nan', ''}):
+            error_messages.append("Position flag column must contain only -1, 0, 1, NaN, or empty string.")
+
+        # 決済フラグの値が0, 1, NaN、または空文字列のみであることを確認
+        if settlement_flag_col and settlement_flag_col != 'None' and not set(df[settlement_flag_col].astype(str).str.strip().unique()).issubset({'0.0', '1.0', 'nan', ''}):
+            error_messages.append("Settlement flag column must contain only 0, 1, NaN, or empty string.")
+
+        if quantity_col and quantity_col != 'None':
+            quantity_values = df[quantity_col].astype(str).str.strip()
+            if (pd.to_numeric(quantity_values, errors='coerce') < 0).any():
+                error_messages.append("Quantity column must contain only positive numeric values or empty strings.")
+
+        if error_messages:
+            return html.Div([
+                html.H5("Error"),
+                html.Ul([html.Li(error) for error in error_messages]),
+            ], style={'color': 'red'})
+
+
+
         # 決済フラグと数量フラグの有無に応じて計算方法を分ける
         if settlement_flag_col is not None and quantity_col is not None:
             # 決済フラグと数量フラグが存在する場合の計算

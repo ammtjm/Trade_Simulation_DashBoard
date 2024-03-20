@@ -18,6 +18,7 @@ def register_callbacks(app):
         """
         if list_of_contents is not None:
             df, columns = parse_contents(list_of_contents[0], list_of_names[0])
+
             return html.Div([
                 dcc.Dropdown(
                     id='datetime-column',
