@@ -1,6 +1,21 @@
+[![Python](https://img.shields.io/badge/Python-3.x-blue?logo=python)](https://www.python.org/)
+[![Docker](https://img.shields.io/badge/Docker-<VERSION>-blue?logo=docker)](https://www.docker.com/)
+![GitHub license](https://img.shields.io/github/license/Naereen/StrapDown.js.svg)
 # Trade Simulation Dashboard
+＊＊The text and most of this application were created using Claude3.＊＊
 
-Trade Simulation Dashboard is a web application that allows users to analyze and visualize trade data from CSV files. It provides insights into the performance of trading strategies and helps users make informed decisions.
+Trade Simulation Dashboard is a web application that analyzes and visualizes trade data from CSV files to evaluate the performance of trading strategies. The target users are system traders and cryptocurrency traders (botters).
+
+The motivation behind creating this application is that while various methods (from classical indicators to complex algorithms using deep learning) are used to explore trading strategies, the simulation part of "calculating the timing and quantity of position holding and closing to calculate returns" is common across all strategies. In fact, libraries such as backtesting.py already exist for this purpose.
+
+The differentiation points from these existing libraries are as follows:
+
+- Interactive visualization and display of metrics
+- A minimal and single-page dashboard
+- Comparison of the performance of the trading strategy with a buy-and-hold strategy (in the future, comparison with other saved strategies will also be added)
+
+#### Note
+In the current version, the concept of transaction fees is not implemented, but it will be added in the future (pull requests are highly welcome).
 
 ## Features
 
@@ -163,4 +178,5 @@ In this diagram:
 - `utils.py` contains utility functions used by both `callbacks.py` and `layouts.py`.
 - `assets/` is a directory that stores static assets, such as `styles.css`.
 
-
+## Author
+X account：[めるしー](https://twitter.com/fx24959482)
