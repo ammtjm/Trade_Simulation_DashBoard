@@ -39,11 +39,11 @@ def update_graph(n_clicks, datetime_col, price_col, position_flag_col, settlemen
         error_messages = []
 
         # position-flag-columnの値が-1, 0, 1, NaN、または空文字列のみであることを確認
-        if position_flag_col and not set(df[position_flag_col].astype(str).str.strip().unique()).issubset({'-1.0', '0.0', '1.0', 'nan', ''}):
+        if position_flag_col and not set(df[position_flag_col].astype(str).str.strip().unique()).issubset({'-1.0', '0.0', '1.0','-1', '0', '1', 'nan', ''}):
             error_messages.append("Position flag column must contain only -1, 0, 1, NaN, or empty string.")
 
         # 決済フラグの値が0, 1, NaN、または空文字列のみであることを確認
-        if settlement_flag_col and settlement_flag_col != 'None' and not set(df[settlement_flag_col].astype(str).str.strip().unique()).issubset({'0.0', '1.0', 'nan', ''}):
+        if settlement_flag_col and settlement_flag_col != 'None' and not set(df[settlement_flag_col].astype(str).str.strip().unique()).issubset({ '0.0', '1.0', '0', '1', 'nan', ''}):
             error_messages.append("Settlement flag column must contain only 0, 1, NaN, or empty string.")
 
         if quantity_col and quantity_col != 'None':
@@ -107,8 +107,8 @@ def update_graph(n_clicks, datetime_col, price_col, position_flag_col, settlemen
                     position_open = None
                     position_open = None
 
-        df['cumulated profit'] = df['profit'].fillna(0).cumsum()
-        df['cumulated profit ratio'] = df['cumulated profit'] / df[price_col].iloc[0]
+        df['cumulative profit'] = df['profit'].fillna(0).cumsum()
+        df['cumulative profit ratio'] = df['cumulative profit'] / df[price_col].iloc[0]
         
         # ポジションの開始と終了点の特定
         position_start = df[df[position_flag_col] != 0][datetime_col]
@@ -145,15 +145,15 @@ def update_graph(n_clicks, datetime_col, price_col, position_flag_col, settlemen
 
         # 累積利益率の推移グラフ
         fig_cumulative_profit_ratio = go.Figure()
-        fig_cumulative_profit_ratio.add_trace(go.Scatter(x=df[datetime_col], y=df['cumulated profit ratio'], mode='lines', name='Cumulated profit ratio', line=dict(color='#f1c40f')))
+        fig_cumulative_profit_ratio.add_trace(go.Scatter(x=df[datetime_col], y=df['cumulative profit ratio'], mode='lines', name='Cumulated profit ratio', line=dict(color='#f1c40f')))
         fig_cumulative_profit_ratio.update_layout(
             xaxis=dict(title='unit time', gridcolor='#333', zerolinecolor='#333'),
-            yaxis=dict(title='cumulated profit ratio', gridcolor='#333', zerolinecolor='#333'),
+            yaxis=dict(title='cumulative profit ratio', gridcolor='#333', zerolinecolor='#333'),
         )
 
         # 累積利益率の推移グラフ
         fig_cumulative_profit_ratio = go.Figure()
-        fig_cumulative_profit_ratio.add_trace(go.Scatter(x=df[datetime_col], y=df['cumulated profit ratio'], mode='lines', name='Cumulated profit ratio', line=dict(color='#f1c40f')))
+        fig_cumulative_profit_ratio.add_trace(go.Scatter(x=df[datetime_col], y=df['cumulative profit ratio'], mode='lines', name='Cumulated profit ratio', line=dict(color='#f1c40f')))
 
         # Unit_PnLの計算
         df['Unit_PnL'] = df['profit'].fillna(0)
@@ -163,7 +163,7 @@ def update_graph(n_clicks, datetime_col, price_col, position_flag_col, settlemen
 
         fig_cumulative_profit_ratio.update_layout(
             xaxis=dict(title='unit time', gridcolor='#333', zerolinecolor='#333'),
-            yaxis=dict(title='cumulated profit ratio', gridcolor='#333', zerolinecolor='#333'),
+            yaxis=dict(title='cumulative profit ratio', gridcolor='#333', zerolinecolor='#333'),
             yaxis2=dict(title='Unit_PnL', overlaying='y', side='right', gridcolor='#333', zerolinecolor='#333'),
             legend=dict(x=0.02, y=0.98, orientation='v', font=dict(color='white')),
             plot_bgcolor='#222',
@@ -182,8 +182,8 @@ def update_graph(n_clicks, datetime_col, price_col, position_flag_col, settlemen
         )
 
         # マックスドローダウン期間とマックスドローダウンの計算
-        df['max'] = df['cumulated profit ratio'].cummax()
-        df['drawdown'] = df['cumulated profit ratio'] - df['max']
+        df['max'] = df['cumulative profit ratio'].cummax()
+        df['drawdown'] = df['cumulative profit ratio'] - df['max']
         max_drawdown_ratio = df['drawdown'].min()
         max_drawdown_start = df[df['drawdown'] == max_drawdown_ratio][datetime_col].iloc[0]
         max_drawdown_end = df[df[datetime_col] > max_drawdown_start][datetime_col].iloc[0]
@@ -197,14 +197,14 @@ def update_graph(n_clicks, datetime_col, price_col, position_flag_col, settlemen
         profit_factor = -avg_profit / avg_loss if avg_loss != 0 else np.inf
 
         # 最終累積利益率とポジション保有期間の割合の計算
-        final_cumulative_profit_ratio = df['cumulated profit ratio'].iloc[-1]
+        final_cumulative_profit_ratio = df['cumulative profit ratio'].iloc[-1]
         position_period_ratio = len(df[df[position_flag_col] != 0]) / len(df)
 
         # Buy&Holdの結果を計算
         df_buy_and_hold = df.copy()
         df_buy_and_hold['profit'] = df_buy_and_hold[price_col] - df_buy_and_hold[price_col].iloc[0]
-        df_buy_and_hold['cumulated profit'] = df_buy_and_hold['profit']
-        df_buy_and_hold['cumulated profit ratio'] = df_buy_and_hold['cumulated profit'] / df_buy_and_hold[price_col].iloc[0]
+        df_buy_and_hold['cumulative profit'] = df_buy_and_hold['profit']
+        df_buy_and_hold['cumulative profit ratio'] = df_buy_and_hold['cumulative profit'] / df_buy_and_hold[price_col].iloc[0]
         df_buy_and_hold['Position Holding Density'] = 1
 
         # Buy&Holdのシャープレシオの計算
@@ -213,20 +213,20 @@ def update_graph(n_clicks, datetime_col, price_col, position_flag_col, settlemen
         sharpe_ratio_buy_and_hold = (returns_buy_and_hold.mean() - risk_free_rate) / returns_buy_and_hold.std()
 
         # Buy&Holdのマックスドローダウン期間とマックスドローダウンの計算
-        df_buy_and_hold['max'] = df_buy_and_hold['cumulated profit ratio'].cummax()
-        df_buy_and_hold['drawdown'] = df_buy_and_hold['cumulated profit ratio'] - df_buy_and_hold['max']
+        df_buy_and_hold['max'] = df_buy_and_hold['cumulative profit ratio'].cummax()
+        df_buy_and_hold['drawdown'] = df_buy_and_hold['cumulative profit ratio'] - df_buy_and_hold['max']
         max_drawdown_ratio_buy_and_hold = df_buy_and_hold['drawdown'].min()
         max_drawdown_start_buy_and_hold = df_buy_and_hold[df_buy_and_hold['drawdown'] == max_drawdown_ratio_buy_and_hold][datetime_col].iloc[0]
         max_drawdown_end_buy_and_hold = df_buy_and_hold[df_buy_and_hold[datetime_col] > max_drawdown_start_buy_and_hold][datetime_col].iloc[0]
 
         # Buy&Holdの最終累積利益率の計算
-        final_cumulative_profit_ratio_buy_and_hold = df_buy_and_hold['cumulated profit ratio'].iloc[-1]
+        final_cumulative_profit_ratio_buy_and_hold = df_buy_and_hold['cumulative profit ratio'].iloc[-1]
 
         # ポジション保有期間の密度グラフ(Buy&Hold)
         fig_position_density.add_trace(go.Scatter(x=df_buy_and_hold[datetime_col], y=df_buy_and_hold['Position Holding Density'], mode='lines', name='Position Holding Density(Buy&Hold)', line=dict(color='#3498db')))
 
         # 累積利益率の推移グラフ(Buy&Hold)
-        fig_cumulative_profit_ratio.add_trace(go.Scatter(x=df_buy_and_hold[datetime_col], y=df_buy_and_hold['cumulated profit ratio'], mode='lines', name='cumulated profit ratio(Buy&Hold)', line=dict(color='#9b59b6')))
+        fig_cumulative_profit_ratio.add_trace(go.Scatter(x=df_buy_and_hold[datetime_col], y=df_buy_and_hold['cumulative profit ratio'], mode='lines', name='cumulative profit ratio(Buy&Hold)', line=dict(color='#9b59b6')))
 
         # シャープレシオの推移グラフ(Buy&Hold)
         fig_sharpe_ratio.add_trace(go.Scatter(x=df_buy_and_hold[datetime_col],
