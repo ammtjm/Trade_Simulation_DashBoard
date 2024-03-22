@@ -4,7 +4,7 @@
 # Trade Simulation Dashboard
 ＊＊The text and most of this application were created using Claude3.＊＊
 
-Trade Simulation Dashboard is a web application that analyzes and visualizes trade data from CSV files to evaluate the performance of trading strategies. The target users are system traders and cryptocurrency traders (botters).
+Trade Simulation Dashboard is a web application that analyzes and visualizes trade data from CSV, XLSX and pickle files to evaluate the performance of trading strategies. The target users are system traders and cryptocurrency traders (botters).
 
 The motivation behind creating this application is that while various methods (from classical indicators to complex algorithms using deep learning) are used to explore trading strategies, the simulation part of "calculating the timing and quantity of position holding and closing to calculate returns" is common across all strategies. In fact, libraries such as backtesting.py already exist for this purpose.
 
