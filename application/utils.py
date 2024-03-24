@@ -271,7 +271,22 @@ def update_graph(n_clicks, datetime_col, price_col, position_flag_col, settlemen
             position_period_ratio_display = '100.00%'
             win_rate_display = 'N/A'
 
-        return html.Div([
+        return {
+            'df': df,
+            'df_buy_and_hold': df_buy_and_hold,
+            'fig': fig,
+            'fig_position_density': fig_position_density,
+            'fig_cumulative_profit_ratio': fig_cumulative_profit_ratio,
+            'fig_sharpe_ratio': fig_sharpe_ratio,
+            'final_cumulative_profit_ratio': final_cumulative_profit_ratio,
+            'profit_factor': profit_factor,
+            'max_drawdown_ratio': max_drawdown_ratio,
+            'sharpe_ratio': sharpe_ratio,
+            'avg_profit': avg_profit,
+            'avg_loss': avg_loss,
+            'position_period_ratio': position_period_ratio,
+            'win_rate': win_rate,
+            'layout':html.Div([
             html.H5(filename[0], style={'color': 'white'}),
             html.H6(datetime.datetime.utcnow(), style={'color': 'white'}),
             html.Div([
@@ -327,5 +342,6 @@ def update_graph(n_clicks, datetime_col, price_col, position_flag_col, settlemen
         ], className='graph-panel', style={'width': 'calc(50% - 10px)'}),
         ], style={'display': 'flex', 'justifyContent': 'space-between', 'gap': '20px', 'marginBottom': '20px'}),
     ])
+        }
     else:
         return html.Div()

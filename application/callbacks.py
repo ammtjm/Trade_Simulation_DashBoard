@@ -3,6 +3,8 @@
 
 from dash import dcc, html, Input, Output, State
 from utils import parse_contents, update_graph
+import os
+import pandas as pd
 
 def register_callbacks(app):
     """
@@ -75,6 +77,37 @@ def register_callbacks(app):
         if n_clicks > 0:
             settlement_flag_col = None if settlement_flag_col == 'None' else settlement_flag_col
             quantity_col = None if quantity_col == 'None' else quantity_col
-            return update_graph(n_clicks, datetime_col, price_col, position_flag_col, settlement_flag_col, quantity_col, contents, filename, strategy)
+            
+            result = update_graph(n_clicks, datetime_col, price_col, position_flag_col, settlement_flag_col, quantity_col, contents, filename, strategy)
+
+            # グラフの結果をCSVファイルとして出力
+            output_dir = 'Output_folder'
+            os.makedirs(output_dir, exist_ok=True)
+            
+            df = result['df']
+            df_buy_and_hold = result['df_buy_and_hold']
+            
+            output_file = os.path.join(output_dir, f'{os.path.splitext(filename[0])[0]}_result.xlsx')
+            
+            with pd.ExcelWriter(output_file) as writer:
+                df.to_excel(writer, sheet_name='Current Strategy', index=False)
+                df_buy_and_hold.to_excel(writer, sheet_name='Buy and Hold', index=False)
+                
+                # 他の8つの指標をエクセルの別シートに保存
+                metrics = {
+                    'Cumulative Profit Ratio': result['final_cumulative_profit_ratio'],
+                    'Profit Factor': result['profit_factor'],
+                    'Max Drawdown': result['max_drawdown_ratio'],
+                    'Sharpe Ratio': result['sharpe_ratio'],
+                    'Avg Profit': result['avg_profit'],
+                    'Avg Loss': result['avg_loss'],
+                    'Position Period Ratio': result['position_period_ratio'],
+                    'Win Rate': result['win_rate']
+                }
+                
+                metrics_df = pd.DataFrame.from_dict(metrics, orient='index', columns=['Value'])
+                metrics_df.to_excel(writer, sheet_name='Metrics')
+    
+                return result['layout']
         else:
             return html.Div()
