@@ -44,24 +44,50 @@ Trade Simulation Dashboard は、CSVファイルから取引データを分析�
 - Python 3.x
 - pipパッケージマネージャー
 
-### インストール
+### インストール(Docker利用無し)
 
 1. リポジトリをクローンします:
 
 ```bash
-git clone https://github.com/your-username/trade-simulation-dashboard.git
+git clone https://github.com/ammtjm/Trade_Simulation_DashBoard.git
 ```
 
 2. プロジェクトディレクトリに移動します:
 
 ```bash
-cd trade-simulation-dashboard
+cd Trade_Simulation_DashBoard/application
 ```
 
 3. 必要な依存関係をインストールします:
 
 ```bash
 pip install -r requirements.txt
+```
+
+### インストール(Docer利用)
+
+1. リポジトリをクローンします:
+
+```bash
+git clone https://github.com/ammtjm/Trade_Simulation_DashBoard.git
+```
+
+2. プロジェクトディレクトリに移動します:
+
+```bash
+cd Trade_Simulation_DashBoard
+```
+
+3. Dockerイメージをビルドします:
+
+```bash
+docker build -t trade-sim-dashboard .
+```
+
+4. Dockerコンテナを実行します:
+
+```bash
+docker run -p 8050:8050 trade-sim-dashboard
 ```
 
 ### 使い方

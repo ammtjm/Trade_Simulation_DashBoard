@@ -43,18 +43,18 @@ In the current version, the concept of transaction fees is not implemented, but 
 - Python 3.x
 - pip package manager
 
-### Installation
+### Installation (without Docker)
 
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/your-username/trade-simulation-dashboard.git
+git clone https://github.com/ammtjm/Trade_Simulation_DashBoard.git
 ```
 
 2. Navigate to the project directory:
 
 ```bash
-cd trade-simulation-dashboard
+cd Trade_Simulation_DashBoard/application
 ```
 
 3. Install the required dependencies:
@@ -63,6 +63,31 @@ cd trade-simulation-dashboard
 pip install -r requirements.txt
 ```
 
+### Installation (with Docker)
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/ammtjm/Trade_Simulation_DashBoard.git
+```
+
+2. Navigate to the project directory:
+
+```bash
+cd Trade_Simulation_DashBoard
+```
+
+3. Build the Docker image:
+
+```bash
+docker build -t trade-sim-dashboard .
+```
+
+4. Run the Docker container:
+
+```bash
+docker run -p 8050:8050 trade-sim-dashboard
+```
 ### Usage
 
 1. Run the application:

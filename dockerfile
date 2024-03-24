@@ -10,11 +10,11 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # アプリケーションの依存関係をインストール
-COPY requirements.txt .
+COPY application/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # アプリケーションのソースコードをコピー
-COPY . .
+COPY application/ .
 
 # ポートを公開
 EXPOSE 8050
