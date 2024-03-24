@@ -20,8 +20,8 @@ Trade Simulation Dashboard は、CSVファイルから取引データを分析�
 #### 注意 今バージョンでは取引手数料の概念も未実装ですが、今後追加する予定です（プルリクエストは大歓迎です）。
 ## 機能
 
-- トレードデータを含むCSVファイルのアップロード
-- 分析に必要なカラムの選択（datetime、price、position flag、settlement flag、quantity）
+- 分析に必要なカラムを含むCSVファイルのアップロード
+- カラムの選択（datetime、price、position flag、settlement flag、quantity）
     - datetime : 分析対象の資産のタイムスタンプカラムを選択してください
     - price : 分析対象の資産の価格カラムを選択してください
     - position flag: ロングまたはショートのポジションを示すカラムを選択してください。1はロング、-1はショート、0はアクションなしを表します
@@ -29,13 +29,13 @@ Trade Simulation Dashboard は、CSVファイルから取引データを分析�
     - quantity : 数量を表すカラムを選択してください。0または正の値が含まれている必要があります。これに該当するカラムが存在しない場合は、"None"を選択してください
     
     settlement flagとquantity columnsはデータに存在しない場合でも、アプリケーションは機能します。その場合は、それらのカラムに対して"None"を選択してください。
-    
+![alt text](image_folder/image.png) 
 - 選択したデータの検証と前処理
 - 選択したデータに基づいたインタラクティブな可視化とメトリクスの生成
 - トレード戦略のパフォーマンスと買い持ち戦略の比較
 - 累積リターン、ドローダウン、シャープレシオなどの主要なメトリクスの表示
 
-![alt text](/image_folder/image.png)
+
 
 ## 始め方
 

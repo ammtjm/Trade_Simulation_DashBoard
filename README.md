@@ -28,13 +28,14 @@ In the current version, the concept of transaction fees is not implemented, but 
     - quantity column: Select the column representing the quantity, which should contain 0 or positive values. If this column does not exist in your data, you can select "None".
     
     The application can still function even if the settlement flag and quantity columns are not present in your data. In such cases, please select "None" for those columns.
-    
+
+![alt text](image_folder/image.png) 
 - Validate and preprocess the selected data
 - Generate interactive visualizations and metrics based on the selected data
 - Compare the performance of the trading strategy against a buy-and-hold strategy
 - Display key metrics such as cumulative returns, drawdowns, Sharpe ratio, and more
 
-![alt text](/image_folder/image.png)
+
 
 ## Getting Started
 
