@@ -30,23 +30,32 @@ def parse_contents(contents, filename):
     except Exception as e:
         return html.Div(['ファイルの処理中にエラーが発生しました。'], style={'color': 'white'})
 
-def update_graph(n_clicks, datetime_col, price_col, position_flag_col, settlement_flag_col, quantity_col, contents, filename, strategy):
+def update_graph(n_clicks, datetime_col, price_col, position_flag_col, settlement_flag_col, quantity_col, contents, filename, strategy, df=None):
     if n_clicks > 0:
-        df, _ = parse_contents(contents[0], filename[0])
-
-        df[datetime_col] = pd.to_datetime(df[datetime_col])
+        if df is None:
+            return html.Div(['No valid data found.'], style={'color': 'white'})
 
         error_messages = []
 
-        # position-flag-columnの値が-1, 0, 1, NaN、または空文字列のみであることを確認
-        if position_flag_col and not set(df[position_flag_col].astype(str).str.strip().unique()).issubset({'-1.0', '0.0', '1.0','-1', '0', '1', 'nan', ''}):
-            error_messages.append("Position flag column must contain only -1, 0, 1, NaN, or empty string.")
+        if datetime_col not in df.columns:
+            error_messages.append(f'Datetime column "{datetime_col}" not found in the dataframe.')
+        else:
+            df[datetime_col] = pd.to_datetime(df[datetime_col])
 
-        # 決済フラグの値が0, 1, NaN、または空文字列のみであることを確認
-        if settlement_flag_col and settlement_flag_col != 'None' and not set(df[settlement_flag_col].astype(str).str.strip().unique()).issubset({ '0.0', '1.0', '0', '1', 'nan', ''}):
-            error_messages.append("Settlement flag column must contain only 0, 1, NaN, or empty string.")
+        if price_col not in df.columns:
+            error_messages.append(f'Price column "{price_col}" not found in the dataframe.')
 
-        if quantity_col and quantity_col != 'None':
+        if position_flag_col is not None and position_flag_col in df.columns:
+            if not set(df[position_flag_col].astype(str).str.strip().unique()).issubset({'-1.0', '0.0', '1.0', '-1', '0', '1', 'nan', ''}):
+                error_messages.append("Position flag column must contain only -1, 0, 1, NaN, or empty string.")
+        elif position_flag_col is not None:
+            error_messages.append(f'Position flag column "{position_flag_col}" not found in the dataframe.')
+
+        if settlement_flag_col is not None and settlement_flag_col in df.columns:
+            if not set(df[settlement_flag_col].astype(str).str.strip().unique()).issubset({'0.0', '1.0', '0', '1', 'nan', ''}):
+                error_messages.append("Settlement flag column must contain only 0, 1, NaN, or empty string.")
+
+        if quantity_col is not None and quantity_col in df.columns:
             quantity_values = df[quantity_col].astype(str).str.strip()
             if (pd.to_numeric(quantity_values, errors='coerce') < 0).any():
                 error_messages.append("Quantity column must contain only positive numeric values or empty strings.")
@@ -59,53 +68,56 @@ def update_graph(n_clicks, datetime_col, price_col, position_flag_col, settlemen
 
 
 
-        # 決済フラグと数量フラグの有無に応じて計算方法を分ける
-        if settlement_flag_col is not None and quantity_col is not None:
-            # 決済フラグと数量フラグが存在する場合の計算
-            df['profit'] = np.nan
-            position_open = None
-            position_quantity = 0
-            for i in range(len(df)):
-                if df.loc[i, position_flag_col] != 0 and position_open is None:
-                    position_open = i
-                    position_quantity = df.loc[i, quantity_col]
-                elif df.loc[i, settlement_flag_col] == 1 and position_open is not None:
-                    settled_quantity = min(position_quantity, df.loc[i, quantity_col])
-                    df.loc[i, 'profit'] = (df.loc[i, price_col] - df.loc[position_open, price_col]) * df.loc[position_open, position_flag_col] * settled_quantity
-                    position_quantity -= settled_quantity
-                    if position_quantity == 0:
-                        position_open = None
-        elif settlement_flag_col is None and quantity_col is not None:
-            # 決済フラグが存在せず、数量フラグのみ存在する場合の計算
-            df['profit'] = np.nan
-            position_open = None
-            for i in range(len(df)):
-                if df.loc[i, position_flag_col] != 0 and position_open is None:
-                    position_open = i
-                elif position_open is not None and df.loc[i, position_flag_col] == -df.loc[position_open, position_flag_col]:
-                    df.loc[i, 'profit'] = (df.loc[i, price_col] - df.loc[position_open, price_col]) * df.loc[position_open, position_flag_col] * df.loc[position_open, quantity_col]
-                    position_open = None
-        elif settlement_flag_col is None and quantity_col is None:
-            # 決済フラグと数量フラグが存在しない場合の計算
-            df['profit'] = np.nan
-            position_open = None
-            for i in range(len(df)):
-                if df.loc[i, position_flag_col] != 0 and position_open is None:
-                    position_open = i
-                elif position_open is not None and df.loc[i, position_flag_col] == -df.loc[position_open, position_flag_col]:
-                    df.loc[i, 'profit'] = (df.loc[i, price_col] - df.loc[position_open, price_col]) * df.loc[position_open, position_flag_col]
-                    position_open = None
+# 決済フラグと数量フラグの有無に応じて計算方法を分ける
+        if position_flag_col is None:
+            return html.Div(['Position flag column is required.'], style={'color': 'white'})
         else:
-            # 決済フラグのみ存在する場合の計算（変更なし）
-            df['profit'] = np.nan
-            position_open = None
-            for i in range(len(df)):
-                if df.loc[i, position_flag_col] != 0 and position_open is None:
-                    position_open = i
-                elif settlement_flag_col is not None and df.loc[i, settlement_flag_col] == 1 and position_open is not None:
-                    df.loc[i, 'profit'] = (df.loc[i, price_col] - df.loc[position_open, price_col]) * df.loc[position_open, position_flag_col]
-                    position_open = None
-                    position_open = None
+            if settlement_flag_col is not None and quantity_col is not None:
+                # 決済フラグと数量フラグが存在する場合の計算
+                df['profit'] = np.nan
+                position_open = None
+                position_quantity = 0
+                for i in range(len(df)):
+                    if df.loc[i, position_flag_col] != 0 and position_open is None:
+                        position_open = i
+                        position_quantity = df.loc[i, quantity_col]
+                    elif settlement_flag_col in df.columns and df.loc[i, settlement_flag_col] == 1 and position_open is not None:
+                        settled_quantity = min(position_quantity, df.loc[i, quantity_col])
+                        df.loc[i, 'profit'] = (df.loc[i, price_col] - df.loc[position_open, price_col]) * df.loc[position_open, position_flag_col] * settled_quantity
+                        position_quantity -= settled_quantity
+                        if position_quantity == 0:
+                            position_open = None
+            elif settlement_flag_col is None and quantity_col is not None:
+                # 決済フラグが存在せず、数量フラグのみ存在する場合の計算
+                df['profit'] = np.nan
+                position_open = None
+                for i in range(len(df)):
+                    if df.loc[i, position_flag_col] != 0 and position_open is None:
+                        position_open = i
+                    elif position_open is not None and df.loc[i, position_flag_col] == -df.loc[position_open, position_flag_col]:
+                        df.loc[i, 'profit'] = (df.loc[i, price_col] - df.loc[position_open, price_col]) * df.loc[position_open, position_flag_col] * df.loc[position_open, quantity_col]
+                        position_open = None
+            elif settlement_flag_col is None and quantity_col is None:
+                # 決済フラグと数量フラグが存在しない場合の計算
+                df['profit'] = np.nan
+                position_open = None
+                for i in range(len(df)):
+                    if df.loc[i, position_flag_col] != 0 and position_open is None:
+                        position_open = i
+                    elif position_open is not None and df.loc[i, position_flag_col] == -df.loc[position_open, position_flag_col]:
+                        df.loc[i, 'profit'] = (df.loc[i, price_col] - df.loc[position_open, price_col]) * df.loc[position_open, position_flag_col]
+                        position_open = None
+            else:
+                # 決済フラグのみ存在する場合の計算（変更なし）
+                df['profit'] = np.nan
+                position_open = None
+                for i in range(len(df)):
+                    if df.loc[i, position_flag_col] != 0 and position_open is None:
+                        position_open = i
+                    elif settlement_flag_col in df.columns and df.loc[i, settlement_flag_col] == 1 and position_open is not None:
+                        df.loc[i, 'profit'] = (df.loc[i, price_col] - df.loc[position_open, price_col]) * df.loc[position_open, position_flag_col]
+                        position_open = None
+                        position_open = None
 
         df['cumulative profit'] = df['profit'].fillna(0).cumsum()
         df['cumulative profit ratio'] = df['cumulative profit'] / df[price_col].iloc[0]
@@ -122,7 +134,10 @@ def update_graph(n_clicks, datetime_col, price_col, position_flag_col, settlemen
         returns = df['profit'].fillna(0)
         sharpe_ratio = (returns.mean() - risk_free_rate) / returns.std()
 
-# プロットの作成
+        # datetime列をdatetimeに変換し、フォーマットを指定
+        df[datetime_col] = pd.to_datetime(df[datetime_col]).dt.strftime('%Y-%m-%d %H:%M:%S')
+
+        # プロットの作成
         fig = go.Figure()
         fig.add_trace(go.Scatter(x=df[datetime_col], y=df[price_col], mode='lines', name='Price', line=dict(color='#3498db')))
         fig.add_trace(go.Scatter(x=position_start, y=df[price_col][df[position_flag_col] != 0], mode='markers', name='start position', marker=dict(color='#2ecc71', size=8)))

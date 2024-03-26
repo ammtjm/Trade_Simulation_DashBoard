@@ -5,13 +5,38 @@
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease;
 }
+
 .metric-panel:hover {
     transform: translateY(-5px);
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
+
 .graph-panel {
     background-color: #2a2a2a;
-    padding: 10px;
-    border-radius: 10px;
+    padding: 15px;
+    border-radius: 15px;
     box-sizing: border-box;
+    width: calc(50% - 10px);
+    height: 500px;  /* グラフの高さを調整 */
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.columns {
+    flex: 1;
+    padding-left: 15px;
+    padding-right: 15px;
+    color: black !important;
+}
+
+.Select-value-label {
+    color: black !important;
+}
+
+.analyze-button {
+    font-size: 18px;
+    padding: 10px 20px;
 }
