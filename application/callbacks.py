@@ -156,7 +156,7 @@ def register_callbacks(app):
 
                 result = update_graph(n_clicks, datetime_col, price_col, position_flag_col, settlement_flag_col, quantity_col, None, filename, strategy, df)
 
-                output_dir = 'Output_folder'
+                output_dir = 'Output'
                 os.makedirs(output_dir, exist_ok=True)
 
                 df = result['df']
