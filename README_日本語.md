@@ -4,7 +4,7 @@
 
 # Trade Simulation Dashboard
 ＊＊本文並びに、本アプリはClaude3を利用して作成しております。＊＊
-
+![alt text](image_folder/image-1.png) 
 Trade Simulation Dashboard は、CSV(Excel,pickle含む)ファイルまたは入力pandasのデータフレームから取引データを分析・可視化し、トレード戦略のパフォーマンスを評価するためのWebアプリケーションです。
 
 対象ユーザーはシステムトレーダーや暗号資産トレーダー（botter）を想定しています。CSVやエクセルファイル入力にも対応しているため、売買履歴をエクセルで管理している方や、botの取引履歴を分析したい方にも利用いただけます。
