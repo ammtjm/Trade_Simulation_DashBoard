@@ -4,6 +4,8 @@
 
 # Trade Simulation Dashboard
 **This document and the application were largely created using Claude3.**
+
+\[Update on March 27, 2024\] The application now supports pandas DataFrames as input. Additionally, the output results can now be saved as tables in an Excel file.
 ![alt text](image_folder/image-1.png) 
 Trade Simulation Dashboard is a web application that analyzes and visualizes trading data from CSV files (including Excel and pickle) or input pandas DataFrames to evaluate the performance of trading strategies.
 
