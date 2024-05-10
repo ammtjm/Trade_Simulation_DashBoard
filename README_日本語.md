@@ -218,7 +218,3 @@ graph LR
 - `assets/`は、`styles.css`などの静的アセットを保存するディレクトリです。
 - `Input/`は、`sample_dataframe.py`などのデータフレームを返すget_dataframe関数を含むpythonファイルを格納するディレクトリです。
 - `Output/`は、`result.xlsx`などの各メトリクスとグラフの数値テーブルを含むエクセルファイルが生成されるディレクトリです。
-
-## Author
-X アカウント：[めるしー](https://twitter.com/fx24959482)
-
