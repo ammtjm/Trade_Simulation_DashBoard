@@ -225,6 +225,3 @@ This diagram illustrates:
 - `assets/` is a directory for storing static assets such as `styles.css`.
 - `Input/` is a directory for storing Python files like `sample_dataframe.py` that contain the get_dataframe function returning a DataFrame.
 - `Output/` is a directory where the Excel file like `result.xlsx` containing each metric and graph data table is generated.
-
-## Author
-X Account: [めるしー](https://twitter.com/fx24959482)
