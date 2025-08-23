@@ -69,7 +69,7 @@ cd Trade_Simulation_DashBoard/application
 pip install -r requirements.txt
 ```
 
-### インストール(Docer利用)
+### インストール(Docker利用)
 
 1. リポジトリをクローンします:
 
