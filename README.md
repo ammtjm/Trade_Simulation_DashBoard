@@ -119,7 +119,7 @@ graph LR
     B --> C{Interactive Visualization and Metrics Generation}
     C --> D[Dashboard Display]
     C --> E[Output: Excel file with metrics and graph data]
-    E --> F[Output_folder/]
+    E --> F[Output/]
 ```
 
 ## Metrics
@@ -184,7 +184,7 @@ Note: The code assumes that the 'Profit' column is calculated based on the posit
 - `requirements.txt`: Lists the required Python packages for running the application.
 - `assets/`: Directory for storing static assets such as CSS files.
 - `Input/`: Directory for storing Python files containing the get_dataframe function that returns a DataFrame.
-- `Output_folder/`: Directory where the Excel file containing each metric and graph data table is generated.
+- `Output/`: Directory where the Excel file containing each metric and graph data table is generated.
 
 ## Contributing
 
