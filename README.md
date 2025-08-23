@@ -40,6 +40,7 @@ The main features of this application, summarized from the above, are as follows
 - Display of key metrics such as cumulative return, drawdown, and Sharpe ratio
 - Storage of each metric and graph data table in an Excel file in separate sheets under the Output directory
 - Visualization of graphs directly from a DataFrame by storing it in the get_dataframe function of a Python file under the Input directory (the sample is commented out by default)
+- Utility function to calculate returns for a multi-asset portfolio from price data and asset weights
 
 ## Getting Started
 

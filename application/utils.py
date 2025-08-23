@@ -30,6 +30,34 @@ def parse_contents(contents, filename):
     except Exception as e:
         return html.Div(['ファイルの処理中にエラーが発生しました。'], style={'color': 'white'})
 
+
+def calculate_portfolio_returns(price_df, weights):
+    """複数資産のポートフォリオリターンを計算します。
+
+    Parameters
+    ----------
+    price_df : pandas.DataFrame
+        各資産の価格を列に持つDataFrame。
+    weights : dict or pandas.Series
+        各資産に対応するポートフォリオの重み。キーは列名、値は重み。
+
+    Returns
+    -------
+    pandas.DataFrame
+        各資産のリターン、ポートフォリオリターン、累積リターンを含むDataFrame。
+    """
+    weight_series = pd.Series(weights)
+    missing_cols = [col for col in weight_series.index if col not in price_df.columns]
+    if missing_cols:
+        raise ValueError(f"Asset columns not found in price_df: {missing_cols}")
+
+    returns = price_df[weight_series.index].pct_change().fillna(0)
+    portfolio_return = returns.mul(weight_series, axis=1).sum(axis=1)
+    result = returns.copy()
+    result['portfolio_return'] = portfolio_return
+    result['cumulative_portfolio_return'] = (1 + portfolio_return).cumprod() - 1
+    return result
+
 def update_graph(n_clicks, datetime_col, price_col, position_flag_col, settlement_flag_col, quantity_col, contents, filename, strategy, df=None):
     if n_clicks > 0:
         if df is None:
