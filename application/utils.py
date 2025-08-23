@@ -132,7 +132,12 @@ def update_graph(n_clicks, datetime_col, price_col, position_flag_col, settlemen
         # シャープレシオの計算
         risk_free_rate = 0.0  # 無リスク利子率（適切な値に調整）
         returns = df['profit'].fillna(0)
-        sharpe_ratio = (returns.mean() - risk_free_rate) / returns.std()
+        returns_std = returns.std()
+        sharpe_ratio = (
+            (returns.mean() - risk_free_rate) / returns_std
+            if returns_std != 0
+            else np.nan
+        )
 
         # datetime列をdatetimeに変換し、フォーマットを指定
         df[datetime_col] = pd.to_datetime(df[datetime_col]).dt.strftime('%Y-%m-%d %H:%M:%S')
@@ -160,21 +165,29 @@ def update_graph(n_clicks, datetime_col, price_col, position_flag_col, settlemen
 
         # 累積利益率の推移グラフ
         fig_cumulative_profit_ratio = go.Figure()
-        fig_cumulative_profit_ratio.add_trace(go.Scatter(x=df[datetime_col], y=df['cumulative profit ratio'], mode='lines', name='Cumulated profit ratio', line=dict(color='#f1c40f')))
-        fig_cumulative_profit_ratio.update_layout(
-            xaxis=dict(title='unit time', gridcolor='#333', zerolinecolor='#333'),
-            yaxis=dict(title='cumulative profit ratio', gridcolor='#333', zerolinecolor='#333'),
+        fig_cumulative_profit_ratio.add_trace(
+            go.Scatter(
+                x=df[datetime_col],
+                y=df['cumulative profit ratio'],
+                mode='lines',
+                name='Cumulated profit ratio',
+                line=dict(color='#f1c40f'),
+            )
         )
-
-        # 累積利益率の推移グラフ
-        fig_cumulative_profit_ratio = go.Figure()
-        fig_cumulative_profit_ratio.add_trace(go.Scatter(x=df[datetime_col], y=df['cumulative profit ratio'], mode='lines', name='Cumulated profit ratio', line=dict(color='#f1c40f')))
 
         # Unit_PnLの計算
         df['Unit_PnL'] = df['profit'].fillna(0)
 
         # 第二軸にUnit_PnLの棒グラフを追加
-        fig_cumulative_profit_ratio.add_trace(go.Bar(x=df[datetime_col], y=df['Unit_PnL'], name='Unit_PnL', yaxis='y2', marker=dict(color='#2ecc71', opacity=0.6)))
+        fig_cumulative_profit_ratio.add_trace(
+            go.Bar(
+                x=df[datetime_col],
+                y=df['Unit_PnL'],
+                name='Unit_PnL',
+                yaxis='y2',
+                marker=dict(color='#2ecc71', opacity=0.6),
+            )
+        )
 
         fig_cumulative_profit_ratio.update_layout(
             xaxis=dict(title='unit time', gridcolor='#333', zerolinecolor='#333'),
@@ -225,7 +238,12 @@ def update_graph(n_clicks, datetime_col, price_col, position_flag_col, settlemen
         # Buy&Holdのシャープレシオの計算
         risk_free_rate = 0.0  # 無リスク利子率（適切な値に調整）
         returns_buy_and_hold = df_buy_and_hold['profit']
-        sharpe_ratio_buy_and_hold = (returns_buy_and_hold.mean() - risk_free_rate) / returns_buy_and_hold.std()
+        returns_buy_and_hold_std = returns_buy_and_hold.std()
+        sharpe_ratio_buy_and_hold = (
+            (returns_buy_and_hold.mean() - risk_free_rate) / returns_buy_and_hold_std
+            if returns_buy_and_hold_std != 0
+            else np.nan
+        )
 
         # Buy&Holdのマックスドローダウン期間とマックスドローダウンの計算
         df_buy_and_hold['max'] = df_buy_and_hold['cumulative profit ratio'].cummax()
