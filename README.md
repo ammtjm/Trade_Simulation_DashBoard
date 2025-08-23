@@ -25,8 +25,9 @@ The main features of this application, summarized from the above, are as follows
 ## Features
 
 - Upload files or DataFrames containing the necessary columns for analysis
-- Select columns (datetime, price, position flag, settlement flag, quantity)
+- Select columns (datetime, asset, price, position flag, settlement flag, quantity)
     - datetime: Select the timestamp column for the asset being analyzed
+    - asset: Select the column that identifies each asset. This enables analysis of multiple assets within a single file.
     - price: Select the price column for the asset being analyzed
     - position flag: Select the column indicating long or short positions. 1 represents long, -1 represents short, and 0 represents no action
     - settlement flag: Select the column indicating position settlement. 1 represents settlement, and 0 represents no action. If there is no corresponding column, select "None"

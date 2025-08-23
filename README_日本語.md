@@ -27,8 +27,9 @@ Trade Simulation Dashboard は、CSV(Excel,pickle含む)ファイルまたは入
 ## 機能
 
 - 分析に必要なカラムを含むファイルまたはデータフレームのアップロード
-- カラムの選択（datetime、price、position flag、settlement flag、quantity）
+- カラムの選択（datetime、asset、price、position flag、settlement flag、quantity）
     - datetime : 分析対象の資産のタイムスタンプカラムを選択してください
+    - asset : 各資産を識別するカラムを選択してください。1つのファイルで複数の資産を扱う際に利用します。
     - price : 分析対象の資産の価格カラムを選択してください
     - position flag: ロングまたはショートのポジションを示すカラムを選択してください。1はロング、-1はショート、0はアクションなしを表します
     - settlement flag: ポジションの決済を示すカラムを選択してください。1は決済、0はアクションなしを表します。これに該当するカラムが存在しない場合は、"None"を選択してください
